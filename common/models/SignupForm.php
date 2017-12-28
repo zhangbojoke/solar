@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 use common\filters\ArrayFilter;
+use yii\db\Exception;
 
 /**
  * Signup form
@@ -8,7 +9,7 @@ use common\filters\ArrayFilter;
 class SignupForm extends UserExtends
 {
     public $username;
-    public $email;
+    public $nick;
     public $password;
 
 
@@ -29,9 +30,8 @@ class SignupForm extends UserExtends
 //            ['email', 'email'],
 //            ['email', 'string', 'max' => 255],
 //            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-            ['company','unique','targetClass'=>'\common\models\UserExtends','message'=>'公司全称已存在','on'=>['exist']],
-            ['identity','unique','targetClass'=>'\common\models\UserExtends','message'=>'统一社会信用代码已存在','on'=>['exist']],
-
+            ['company','unique','targetClass'=>'\common\models\UserExtends','message'=>'公司全称已存在','on'=>['exist','sign']],
+            ['identity','unique','targetClass'=>'\common\models\UserExtends','message'=>'统一社会信用代码已存在','on'=>['exist','sign']],
         ];
     }
 
@@ -39,7 +39,7 @@ class SignupForm extends UserExtends
     {
         return [
             'exist'=>['company','identity'],
-            'sign'=>['username','password'],
+            'sign'=>['username','password','company','identity','license','brand','mobile','logo','nick'],
         ];
     }
 
@@ -51,16 +51,30 @@ class SignupForm extends UserExtends
     public function signup()
     {
         if (!$this->validate()) {
-            return null;
+            return Result::result('验证不通过',500);
         }
+
+        $trs = \Yii::$app->db->beginTransaction();
+        try{
+            $user = new User();
+            $user->username = $this->username;
+            $user->setPassword($this->password);
+            $user->generateAuthKey();
+            $user->role = $user::INSTALL_USER;
+            $user->save();
+            $this->id = $user->id;
+            $this->save();
+            return Result::result('成功');
+        }catch (Exception $e){
+            $trs->rollBack();
+            return Result::result($e->getMessage(),500);
+        }
+//        $user->username = $this->username;
+//        $user->email = $this->email;
+//        $user->setPassword($this->password);
+//        $user->generateAuthKey();
         
-        $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        
-        return $user->save() ? $user : null;
+//        return $user->save() ? $user : null;
     }
 
     public function exist($params){
