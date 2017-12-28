@@ -135,8 +135,8 @@ class SiteController extends Controller
         }
     }
 
-    public function actionTest(){
-        var_dump(\Yii::$app->solar->getToken());
+    public function actionUpload(){
+        //上传图片
     }
 
     /**

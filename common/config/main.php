@@ -7,6 +7,16 @@ if(explode(".",$_SERVER['HTTP_HOST'])[1] == 'local'){
 }
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'bootstrap' => ['debug','gii'],
+    'modules'=>[
+        'debug' => [
+            'class' => 'yii\debug\Module',
+        ],
+        'gii'=>[
+            'class' => 'yii\gii\Module',
+            'allowedIPs'=>['*']
+        ]
+    ],
     'components' => [
         'user' => [
             'identityClass' => 'common\models\User',
