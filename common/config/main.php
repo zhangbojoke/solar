@@ -70,6 +70,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<domain:(\w|-)+>/<controller:(\w|-)+>/<action:(\w|-)+>'=>'<controller>/<action>',
             ],
         ],
     ],

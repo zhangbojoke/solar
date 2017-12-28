@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use common\filters\AccessRule;
+use common\models\User;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -67,6 +68,13 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
+    }
+
+    public function actionHome(){
+        $name = substr(\Yii::$app->request->url,1);
+        $name = substr($name,0,strpos($name,'/'));
+        $user = User::find()->where(['=','username',$name])->one();
+
     }
 
     /**

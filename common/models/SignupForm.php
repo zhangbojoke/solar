@@ -10,6 +10,7 @@ class SignupForm extends UserExtends
 {
     public $username;
     public $nick;
+    public $captcha;
     public $password;
 
 
@@ -39,7 +40,7 @@ class SignupForm extends UserExtends
     {
         return [
             'exist'=>['company','identity'],
-            'sign'=>['username','password','company','identity','license','brand','mobile','logo','nick'],
+            'sign'=>['username','password','company','identity','license','brand','mobile','logo','nick','captcha'],
         ];
     }
 
@@ -73,7 +74,7 @@ class SignupForm extends UserExtends
 //        $user->email = $this->email;
 //        $user->setPassword($this->password);
 //        $user->generateAuthKey();
-        
+
 //        return $user->save() ? $user : null;
     }
 
