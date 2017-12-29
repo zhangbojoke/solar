@@ -1,18 +1,17 @@
 <?php
 namespace frontend\controllers;
 
+use common\components\helpers\Html;
+use common\components\helpers\Url;
 use common\filters\AccessRule;
-use common\models\User;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use common\filters\AccessControl;
-use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 
 /**
@@ -71,10 +70,10 @@ class SiteController extends Controller
     }
 
     public function actionHome(){
-        $name = substr(\Yii::$app->request->url,1);
-        $name = substr($name,0,strpos($name,'/'));
-        $user = User::find()->where(['=','username',$name])->one();
-
+//        $name = substr(\Yii::$app->request->url,1);
+//        $name = substr($name,0,strpos($name,'/'));
+//        $user = User::find()->where(['=','username',$name])->one();
+        return $this->redirect(Url::toRoute(['/site/index','id'=>123]));
     }
 
     /**
@@ -85,39 +84,6 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
-    }
-
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Logs out the current user.
-     *
-     * @return mixed
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
     }
 
     /**

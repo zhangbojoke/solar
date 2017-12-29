@@ -70,7 +70,11 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<domain:(\w|-)+>/<controller:(\w|-)+>/<action:(\w|-)+>'=>'<controller>/<action>',
+                'module'=>[
+                    'pattern'=>'<domain:(\w|-)+>/<controller:(\w|-)+>/<action:(\w|-)+>',
+                    'route'=>'<controller>/<action>',
+                    'mode'=>'<domain>',
+                ],
             ],
         ],
     ],

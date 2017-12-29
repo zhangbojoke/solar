@@ -17,20 +17,25 @@ use yii\web\IdentityInterface;
  * @property string $union_id
  * @property string $password
  * @property string $email
+ * @property string $mobile
  * @property string $auth_key
  * @property string $bind_code
+ * @property string $birthday
  * @property string $parent
  * @property integer $status
+ * @property integer $solar_id
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $role
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    //            $user->bind_code = sprintf("%04d",rand(0,999999));
+
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
     const NORMAL_USER = 1;
-    const INSTALL_USER = 2;
+    const INSTALLER = 2;
     const GUEST = 4;
     const ADMIN = 8;
 
@@ -193,5 +198,17 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function login($params){
+        return '';
+    }
+
+    //注册用户到api
+    public function registerToApi(){
+        if($this->role == $this::NORMAL_USER && $this->status == $this::STATUS_DELETED){
+            return \Yii::$app->solar->registerUser($this->email);
+        }
+        return false;
     }
 }
