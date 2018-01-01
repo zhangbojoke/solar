@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $installer 安装商
- * @property int $user
+ * @property int $user_id
  * @property int $status 当前状态
  * @property int $created_at
  * @property string $location 所在经纬度
@@ -20,6 +20,9 @@ use Yii;
  * @property string $title 标题
  * @property string $remark 备注
  * @property int $update_at 更新时间
+ * @property int $plant_id  api电站id
+ *
+ * @property User $user
  */
 class Station extends \yii\db\ActiveRecord
 {
@@ -37,8 +40,8 @@ class Station extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['installer', 'user', 'location', 'cell', 'inverter', 'collector', 'title', 'remark'], 'required'],
-            [['installer', 'user', 'status', 'type'], 'integer'],
+            [['installer', 'user_id', 'location', 'cell', 'inverter', 'collector', 'title', 'remark'], 'required'],
+            [['installer', 'user_id', 'status', 'type'], 'integer'],
             [['cell', 'inverter', 'collector'], 'string'],
             [['location'], 'string', 'max' => 60],
             [['title', 'remark'], 'string', 'max' => 100],
@@ -53,7 +56,7 @@ class Station extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'installer' => '所属安装商',
-            'user' => '所属终端用户',
+            'user_id' => '所属终端用户',
             'status' => '当前状态',
             'location' => '位置',
             'cell' => '电池',
@@ -67,7 +70,18 @@ class Station extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getUser(){
+        return $this->hasOne(User::className(),['id'=>'user_id']);
+    }
+
     public function getPeakPower(){
         return 0;
+    }
+
+    public function initApiStation(){
+        $res = \Yii::$app->solar->addStation($this->user,$this);
+        if($res->result == true){
+            $this->plant_id = $res->plant_id;
+        }
     }
 }

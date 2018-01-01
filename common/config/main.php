@@ -3,7 +3,7 @@ if(explode(".",$_SERVER['HTTP_HOST'])[1] == 'local'){
     $mysqlHost = 'mysql:host=127.0.0.1;dbname=solar';
     $mysqlName = 'root';
     $mysqlPass = 'root';
-    $redisHost = '127.0.01';
+    $redisHost = '127.0.0.1';
 }
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',

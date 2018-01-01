@@ -105,14 +105,23 @@ class Api
         }else{
             $paramsName = 'query';
         }
-        $options  = [
-            'headers'=>[
-                'Content-Type'=>'application/x-www-form-urlencoded',
-                'token'=>$this->getToken(),
-                'uid'=>$this->getUid(),
-            ],
-            $paramsName=>$this->params,
-        ];
+        if($action == 'oauth' && $method == 'get'){
+            $options  = [
+                'headers'=>[
+                    'Content-Type'=>'application/x-www-form-urlencoded',
+                ],
+                $paramsName=>$this->params,
+            ];
+        }else{
+            $options  = [
+                'headers'=>[
+                    'Content-Type'=>'application/x-www-form-urlencoded',
+                    'token'=>$this->getToken(),
+                    'uid'=>$this->getUid(),
+                ],
+                $paramsName=>$this->params,
+            ];
+        }
         if($action == 'oauth' && $method == 'get'){
             unset($options['headers']['token']);
             unset($options['headers']['uid']);
@@ -199,6 +208,12 @@ class Api
         $this->params['name'] = $station->title;
         $this->params['peak_power'] = $station->getPeakPower();
         return $this->request('POST','plant','add');
+
+    }
+
+    public function getStationList(){
+//        $this->params['locale'] = 'zh-CN';
+        return $this->request('GET','plant','list');
     }
 
     public function getTokenUsage(){
@@ -210,7 +225,6 @@ class Api
      */
     public function getToken()
     {
-
         if(!$this->token){
             $this->params['client_id'] = $this->getAppId();
             $this->params['client_secret'] = $this->getAppKey();
